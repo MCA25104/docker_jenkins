@@ -3,20 +3,23 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/MCA25104/docker_jenkins.git'
+                git 'https://github.com/MCA25104/docker_jenkins.git',branch:'main'
             }
         }
-      stage('Publish'){
+      stage('Build Image'){
         steps{
-          publishHTML([
-            allowMissing:true,
-            alwaysLinkToLastBuild:false,
-            keepAll:false,
-            reportDir:'.',
-            reportFiles:'index.html',
-            reportName:'My HTML Pipe Publish'
-           ])
+            bat 'docker build -t mywebsite.'
         }
-     }
     }
-}
+        stage('Stop Old Container'){
+            steps {
+                bat 'docker stop mycont || exit 0'
+                bat 'docker rm mycont || exit 0'
+            }
+        }
+        stage ('Run Image - Containerize'){
+            steps{
+                bat 'docker run -d -p 7000:80 --name mycont mywebsite'
+            }
+        }
+    }
