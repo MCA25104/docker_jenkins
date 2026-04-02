@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/MCA25104/docker_jenkins.git',branch:'main'
+                git uri:'https://github.com/MCA25104/docker_jenkins.git',branch:'main'
             }
         }
       stage('Build Image'){
